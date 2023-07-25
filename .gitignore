@@ -113,3 +113,16 @@ Temporary Items
 
 
 # End of https://www.toptal.com/developers/gitignore/api/cmake,c++,visualstudiocode
+pico-sdk/src/rp2_common/pico_cyw43_driver/pioasm/tmp/PioasmBuild-cache-Release.cmake
+pico-sdk/src/rp2_common/pico_cyw43_driver/pioasm/tmp/PioasmBuild-cfgcmd.txt
+pico-sdk/src/rp2_common/pico_cyw43_driver/pioasm/tmp/PioasmBuild-cfgcmd.txt.in
+ServoTester/servoTester.cmake
+ServoTester/elf2uf2/tmp/ELF2UF2Build-cfgcmd.txt
+ServoTester/elf2uf2/tmp/ELF2UF2Build-cfgcmd.txt.in
+SSC32U-servo2040/SSC32U-servo2040.cmake
+SSC32U-servo2040/elf2uf2/tmp/ELF2UF2Build-cfgcmd.txt
+SSC32U-servo2040/elf2uf2/tmp/ELF2UF2Build-cfgcmd.txt.in
+generated/pico_base/pico/config_autogen.h
+generated/pico_base/pico/version.h
+.vscode/settings.json
+.vscode/settings.json
