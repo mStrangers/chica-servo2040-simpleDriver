@@ -43,6 +43,14 @@ objs
 *.out
 *.app
 
+#picosdk
+*.bin
+*.dis
+*.elf
+*.elf.map
+*.hex
+*.uf2
+
 ### CMake ###
 CMakeLists.txt.user
 CMakeCache.txt
@@ -113,16 +121,13 @@ Temporary Items
 
 
 # End of https://www.toptal.com/developers/gitignore/api/cmake,c++,visualstudiocode
-pico-sdk/src/rp2_common/pico_cyw43_driver/pioasm/tmp/PioasmBuild-cache-Release.cmake
-pico-sdk/src/rp2_common/pico_cyw43_driver/pioasm/tmp/PioasmBuild-cfgcmd.txt
-pico-sdk/src/rp2_common/pico_cyw43_driver/pioasm/tmp/PioasmBuild-cfgcmd.txt.in
-ServoTester/servoTester.cmake
-ServoTester/elf2uf2/tmp/ELF2UF2Build-cfgcmd.txt
-ServoTester/elf2uf2/tmp/ELF2UF2Build-cfgcmd.txt.in
-SSC32U-servo2040/SSC32U-servo2040.cmake
-SSC32U-servo2040/elf2uf2/tmp/ELF2UF2Build-cfgcmd.txt
-SSC32U-servo2040/elf2uf2/tmp/ELF2UF2Build-cfgcmd.txt.in
-generated/pico_base/pico/config_autogen.h
-generated/pico_base/pico/version.h
+pico-sdk/src/
+ServoTester/elf2uf2/
+SSC32U-servo2040/elf2uf2/
+generated/pico_base/
 .vscode/settings.json
-.vscode/settings.json
+elf2uf2/elf2uf2
+pico-sdk/
+pioasm/pioasm
+drivers/
+

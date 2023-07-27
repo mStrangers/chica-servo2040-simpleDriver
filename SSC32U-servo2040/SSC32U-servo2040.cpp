@@ -270,6 +270,7 @@ void parse_task(void)
 
 							} // while ( actualChar < pCmd[i].count )
 							//update servos structure
+							//to-do reverse servos that need it.
 							ServosMove[ServoNumber].IsMoving = true;
 							ServosMove[ServoNumber].StartPos = servos.pulse(ServoNumber);
 							ServosMove[ServoNumber].EndPos = ServoPosition;
@@ -338,7 +339,8 @@ void move_servo(void)
 			//uint nextPWM = map(Progress, 0 ,ServosMove[currServo].Time,ServosMove[currServo].StartPos,ServosMove[currServo].EndPos);
 			/*long map(long x, long in_min, long in_max, long out_min, long out_max) {
   					return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;}*/
-			nextPWM = (Progress)*(ServosMove[currServo].EndPos - ServosMove[currServo].StartPos) / (ServosMove[currServo].Time) + ServosMove[currServo].StartPos;
+			//nextPWM = (Progress)*(ServosMove[currServo].EndPos - ServosMove[currServo].StartPos) / (ServosMove[currServo].Time) + ServosMove[currServo].StartPos;
+			nextPWM = map(Progress, 0 ,ServosMove[currServo].Time,ServosMove[currServo].StartPos,ServosMove[currServo].EndPos);
 			printf("Moving Servo : %d To Pwm : %d\n", currServo, nextPWM);
 			// constrain position
 			if (nextPWM > 2500) 
@@ -372,6 +374,10 @@ uint speedToTime(uint startPos, uint endPos, uint speed)
 	uint TimeInms = ( absoluteMove / speed ) * 1000;
 	return TimeInms;   
 }
+
+//map function from https://www.arduino.cc/reference/en/language/functions/math/
+long map(long x, long in_min, long in_max, long out_min, long out_max) {
+  					return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;}
 
 /*******************************************************************************
  * VCP/Parsing Support Functions
