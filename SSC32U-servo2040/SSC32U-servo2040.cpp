@@ -273,7 +273,13 @@ void parse_task(void)
 							//to-do reverse servos that need it.
 							ServosMove[ServoNumber].IsMoving = true;
 							ServosMove[ServoNumber].StartPos = servos.pulse(ServoNumber);
-							ServosMove[ServoNumber].EndPos = ServoPosition;
+							if (ServoDirection[ServoNumber] == 1) 
+							{
+								ServosMove[ServoNumber].EndPos = ServoPosition;
+							} else 
+							{
+								ServosMove[ServoNumber].EndPos = reverseServoValue(ServoPosition);
+							}
 							ServosMove[ServoNumber].MoveStartTime = millis();
 							ServosMove[ServoNumber].Time = ServoTime;
 							printf("Moving Servo : %d from position %d to position %d Starttime: %lu Endtime: %d\n", ServoNumber, ServosMove[ServoNumber].StartPos,ServosMove[ServoNumber].EndPos,ServosMove[ServoNumber].MoveStartTime,ServosMove[ServoNumber].Time);
