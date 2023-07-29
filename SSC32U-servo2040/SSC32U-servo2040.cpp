@@ -340,22 +340,28 @@ void move_servo(void)
 	{
 		if (ServosMove[currServo].IsMoving) 
 		{
-			ulong Progress = millis() - ServosMove[currServo].MoveStartTime;
 			uint nextPWM ; 
-			//uint nextPWM = map(Progress, 0 ,ServosMove[currServo].Time,ServosMove[currServo].StartPos,ServosMove[currServo].EndPos);
-			/*long map(long x, long in_min, long in_max, long out_min, long out_max) {
+			if (ServosMove[currServo].Time > 0)
+			{
+				ulong Progress = millis() - ServosMove[currServo].MoveStartTime;
+				//uint nextPWM = map(Progress, 0 ,ServosMove[currServo].Time,ServosMove[currServo].StartPos,ServosMove[currServo].EndPos);
+				/*long map(long x, long in_min, long in_max, long out_min, long out_max) {
   					return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;}*/
-			//nextPWM = (Progress)*(ServosMove[currServo].EndPos - ServosMove[currServo].StartPos) / (ServosMove[currServo].Time) + ServosMove[currServo].StartPos;
-			nextPWM = map(Progress, 0 ,ServosMove[currServo].Time,ServosMove[currServo].StartPos,ServosMove[currServo].EndPos);
-			printf("Moving Servo : %d To Pwm : %d\n", currServo, nextPWM);
-			// constrain position
-			if (nextPWM > 2500) 
-			{
-				nextPWM = 2500;
-			} else if (nextPWM < 500) 
-			{
-				nextPWM = 500;
+				//nextPWM = (Progress)*(ServosMove[currServo].EndPos - ServosMove[currServo].StartPos) / (ServosMove[currServo].Time) + ServosMove[currServo].StartPos;
+				nextPWM = map(Progress, 0 ,ServosMove[currServo].Time,ServosMove[currServo].StartPos,ServosMove[currServo].EndPos);
+				// constrain position
+				if (nextPWM > 2500) 
+				{
+					nextPWM = 2500;
+				} else if (nextPWM < 500) 
+				{
+					nextPWM = 500;
+				}
+			} else {
+				nextPWM = ServosMove[currServo].EndPos;
 			}
+			printf("Moving Servo : %d To Pwm : %d\n", currServo, nextPWM);
+			
 			servos.pulse(currServo,nextPWM);
 			if ( nextPWM == ServosMove[currServo].EndPos)
 			{
