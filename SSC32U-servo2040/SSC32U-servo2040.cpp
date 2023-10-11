@@ -29,8 +29,8 @@ WS2812 led_bar(servo2040::NUM_LEDS, pio1, 0, servo2040::LED_DATA);
 
 /* Servo */
 int ServoDirection[NUM_SERVOS] = {1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-int ServoOffset[NUM_SERVOS] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-int ServoDefaultsPosition[NUM_SERVOS] = {1500,550,2450,1500,550,2450,1500,550,2450,1500,2450,550,1500,2450,550,1500,2450,550};
+int ServoOffset[NUM_SERVOS] = {60,30,60,40,60,40,0,60,50,10,0,70,-30,50,110,-130,100,100};
+int ServoDefaultsPosition[NUM_SERVOS] = {1560,530,2360,1540,560,2340,1500,560,2350,1490,2500,630,1530,2450,590,1630,2400,600};
 servoMove ServosMove[NUM_SERVOS];
 
 /*Serial buffer*/
@@ -66,12 +66,13 @@ int main()
 	while (!stdio_usb_connected()){pendingVCP_ledSequence();}
 	led_bar.clear();
 
-	printf(" Defaults all servos...\r\n\r\n");
+	//printf(" Defaults all servos...\r\n\r\n");
 	
 	//set defaut pos
 	for (auto currServo = START_PIN; currServo < NUM_SERVOS; currServo++) {
+		servos.disable_all();
 		servos.pulse(currServo , ServoDefaultsPosition[currServo]);
-		printf("Default Servo %d..\r\n", currServo + 1 );
+		//printf("Default Servo %d..\r\n", currServo + 1 );
 	}
 
 	/* Enable all servos (centers all servos) */
@@ -129,7 +130,7 @@ void parse_task(void)
 			printf("\n"); //for debug
 			*/
 			/*process buffer*/
-			if (curr_cmdPkt.valueBuffer[0] == '#') //check if it is a command
+			if ((curr_cmdPkt.valueBuffer[0] == '#')|| (curr_cmdPkt.valueBuffer[0] == 'Q')) //check if it is a command
 			{
 				//cut buffer in multiple command
 				parsedCmd pCmd[17];
@@ -192,7 +193,7 @@ void parse_task(void)
 									
 								}
 								//printf("Servo Number Int : %d\n", ServoNumber); // for debugging
-								ServoNumber= ServoNumber - 1 ;
+								//ServoNumber= ServoNumber - 1 ;
 								// only 2 char servo max 
 								if (pCmd[i].valueBuffer[actualChar] == ' ')
 								{
@@ -273,6 +274,9 @@ void parse_task(void)
 							//to-do reverse servos that need it.
 							ServosMove[ServoNumber].IsMoving = true;
 							ServosMove[ServoNumber].StartPos = servos.pulse(ServoNumber);
+							//apply offset
+							ServoPosition = ServoPosition + ServoOffset[ServoNumber];
+
 							if (ServoDirection[ServoNumber] == 1) 
 							{
 								ServosMove[ServoNumber].EndPos = ServoPosition;
@@ -282,12 +286,31 @@ void parse_task(void)
 							}
 							ServosMove[ServoNumber].MoveStartTime = millis();
 							ServosMove[ServoNumber].Time = ServoTime;
-							printf("Moving Servo : %d from position %d to position %d Starttime: %lu Endtime: %d\n", ServoNumber, ServosMove[ServoNumber].StartPos,ServosMove[ServoNumber].EndPos,ServosMove[ServoNumber].MoveStartTime,ServosMove[ServoNumber].Time);
+							//printf("Moving Servo : %d from position %d to position %d Starttime: %lu Endtime: %d\n", ServoNumber, ServosMove[ServoNumber].StartPos,ServosMove[ServoNumber].EndPos,ServosMove[ServoNumber].MoveStartTime,ServosMove[ServoNumber].Time);
 							break;
 						}					
 					case 'Q':
 						{
-							// query
+							// query for now only handle one
+							uint actualChar = 1 ;
+							if (actualChar == pCmd[i].count) //Only one character
+							{
+								bool Moving = false;
+								for (auto currServo = START_PIN; currServo < NUM_SERVOS; currServo++) 
+								{
+									if (ServosMove[currServo].IsMoving) 
+									{
+										Moving = true;
+									}
+								}
+								if (Moving) 
+								{
+									printf("+\n");
+								} else 
+								{
+									printf(".\n");
+								}
+							}
 							break;
 						}
 					default:
@@ -349,21 +372,19 @@ void move_servo(void)
   					return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;}*/
 				//nextPWM = (Progress)*(ServosMove[currServo].EndPos - ServosMove[currServo].StartPos) / (ServosMove[currServo].Time) + ServosMove[currServo].StartPos;
 				nextPWM = map(Progress, 0 ,ServosMove[currServo].Time,ServosMove[currServo].StartPos,ServosMove[currServo].EndPos);
-				// constrain position
-				if (nextPWM > 2500) 
-				{
-					nextPWM = 2500;
-				} else if (nextPWM < 500) 
-				{
-					nextPWM = 500;
-				}
+				
 			} else {
 				nextPWM = ServosMove[currServo].EndPos;
-			}
-			printf("Moving Servo : %d To Pwm : %d\n", currServo, nextPWM);
-			
+			}			
+			//printf("Moving Servo : %d To Pwm : %d\n", currServo+1, nextPWM);
 			servos.pulse(currServo,nextPWM);
-			if ( nextPWM == ServosMove[currServo].EndPos)
+			if ( (nextPWM == ServosMove[currServo].EndPos) || (nextPWM < 500) || (nextPWM > 2500) )
+			{
+				ServosMove[currServo].IsMoving = false;
+			} else if ( (ServosMove[currServo].EndPos > ServosMove[currServo].StartPos) && (nextPWM > ServosMove[currServo].EndPos) )
+			{
+				ServosMove[currServo].IsMoving = false;
+			} else if ((ServosMove[currServo].EndPos < ServosMove[currServo].StartPos) && (nextPWM < ServosMove[currServo].EndPos))
 			{
 				ServosMove[currServo].IsMoving = false;
 			}
