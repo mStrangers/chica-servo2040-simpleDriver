@@ -130,7 +130,7 @@ void parse_task(void)
 			printf("\n"); //for debug
 			*/
 			/*process buffer*/
-			if ((curr_cmdPkt.valueBuffer[0] == '#')|| (curr_cmdPkt.valueBuffer[0] == 'Q')) //check if it is a command
+			if ((curr_cmdPkt.valueBuffer[0] == '#') || (curr_cmdPkt.valueBuffer[0] == 'Q') || (curr_cmdPkt.valueBuffer[0] == 'A') || (curr_cmdPkt.valueBuffer[0] == 'B') || (curr_cmdPkt.valueBuffer[0] == 'C') || (curr_cmdPkt.valueBuffer[0] == 'D') || (curr_cmdPkt.valueBuffer[0] == 'E') || (curr_cmdPkt.valueBuffer[0] == 'F')) //check if it is a command
 			{
 				//cut buffer in multiple command
 				parsedCmd pCmd[17];
@@ -313,6 +313,85 @@ void parse_task(void)
 							}
 							break;
 						}
+					case 'A':
+						{
+							uint mappedPin = cmdPin_to_hardwarePin((cmdPins)TS1);
+							float sensor_voltage = read_analogPin(mappedPin);
+							if (sensor_voltage > 1 ) 
+								{
+									printf("1\n");
+								} else 
+								{
+									printf("0\n");
+								}
+							break;
+						}
+					case 'B':
+						{
+							uint mappedPin = cmdPin_to_hardwarePin((cmdPins)TS2);
+							float sensor_voltage = read_analogPin(mappedPin);
+							if (sensor_voltage > 1 ) 
+								{
+									printf("1\n");
+								} else 
+								{
+									printf("0\n");
+								}
+							break;
+						}
+					case 'C':
+						{
+							uint mappedPin = cmdPin_to_hardwarePin((cmdPins)TS3);
+							float sensor_voltage = read_analogPin(mappedPin);
+							if (sensor_voltage > 1 ) 
+								{
+									printf("1\n");
+								} else 
+								{
+									printf("0\n");
+								}
+							break;
+						}
+					case 'D':
+						{
+							uint mappedPin = cmdPin_to_hardwarePin((cmdPins)TS4);
+							float sensor_voltage = read_analogPin(mappedPin);
+							if (sensor_voltage > 1 ) 
+								{
+									printf("1\n");
+								} else 
+								{
+									printf("0\n");
+								}
+							break;
+						}
+					case 'E':
+						{
+							uint mappedPin = cmdPin_to_hardwarePin((cmdPins)TS5);
+							float sensor_voltage = read_analogPin(mappedPin);
+							if (sensor_voltage > 1 ) 
+								{
+									printf("1\n");
+								} else 
+								{
+									printf("0\n");
+								}
+							break;
+						}
+					case 'F':
+						{
+							uint mappedPin = cmdPin_to_hardwarePin((cmdPins)TS6);
+							float sensor_voltage = read_analogPin(mappedPin);
+							if (sensor_voltage > 1 ) 
+								{
+									printf("1\n");
+								} else 
+								{
+									printf("0\n");
+								}
+							break;
+						}
+
 					default:
 						break;
 					} 
